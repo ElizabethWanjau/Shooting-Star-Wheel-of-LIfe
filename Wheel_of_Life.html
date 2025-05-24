@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel of Life Survey</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://trellis.net/wp-content/uploads/2024/07/shutterstock_349131284.jpg?w=1024'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95); /* Semi-transparent white for readability */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background-color: #e8f4f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #34495e;
+        }
+        .question {
+            margin-bottom: 25px;
+        }
+        .question label {
+            display: block;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: #3498db;
+        }
+        .slider-value {
+            font-size: 18px;
+            color: #3498db;
+            width: 30px;
+            text-align: center;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #2980b9;
+        }
+        #results {
+            margin-top: 30px;
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        canvas {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        .question-page {
+            display: none;
+        }
+        .question-page.active {
+            display: block;
+        }
+        .coaching-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4f9;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .coaching-section p {
+            margin: 0 0 10px;
+            color: #34495e;
+        }
+        .coaching-section a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .coaching-section a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shooting Star Wheel of Life Assessment </h1>
+        <p>Have you ever achieved success in your career or finances, yet felt something was still off? Maybe your health, relationships, or personal fulfillment feel out of sync. That’s your inner compass asking for alignment. It’s time to check your Wheel of Life.</p>
+        <form id="surveyForm">
+            <div id="question1" class="question-page active">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>1. Health & Fitness:How would you rate your physical health, energy levels and mental well-being?</label>
+                    <div class="slider-container">
+                        <input type="range" name="health" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" disabled>Previous</button>
+                    <button type="button" onclick="nextQuestion(1)">Next</button>
+                </div>
+            </div>
+            <div id="question2" class="question-page">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>2. Finances: Are you on track with savings, debt, investment and long-term financial goals?</label>
+                    <div class="slider-container">
+                        <input type="range" name="finances" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" onclick="prevQuestion(2)">Previous</button>
+                    <button type="button" onclick="nextQuestion(2)">Next</button>
+                </div>
+            </div>
+            <div id="question3" class="question-page">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>3. Career: How fulilled are you in your current role-professionally, financially and purpose-wise ?</label>
+                    <div class="slider-container">
+                        <input type="range" name="career" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" onclick="prevQuestion(3)">Previous</button>
+                    <button type="button" onclick="nextQuestion(3)">Next</button>
+                </div>
+            </div>
+            <div id="question4" class="question-page">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>4. Business: If you own or want to start a business,how aligned are you with your revenue goals, growth plans and passion?</label>
+                    <div class="slider-container">
+                        <input type="range" name="business" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" onclick="prevQuestion(4)">Previous</button>
+                    <button type="button" onclick="nextQuestion(4)">Next</button>
+                </div>
+            </div>
+            <div id="question5" class="question-page">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>5. Relationships: How are your connections with family, friend, and people who matter most?</label>
+                    <div class="slider-container">
+                        <input type="range" name="relationships" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" onclick="prevQuestion(5)">Previous</button>
+                    <button type="button" onclick="nextQuestion(5)">Next</button>
+                </div>
+            </div>
+            <div id="question6" class="question-page">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>6. Personal Growth: Are you growing mentally, emotionally, and spiritually? Are you pursuing your dreams?</label>
+                    <div class="slider-container">
+                        <input type="range" name="personalGrowth" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" onclick="prevQuestion(6)">Previous</button>
+                    <button type="button" onclick="nextQuestion(6)">Next</button>
+                </div>
+            </div>
+            <div id="question7" class="question-page">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>7. Fun & Recreation: How often do you enjoy life-hobbies, rest, laughter, and adventure?</label>
+                    <div class="slider-container">
+                        <input type="range" name="fun" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" onclick="prevQuestion(7)">Previous</button>
+                    <button type="button" onclick="nextQuestion(7)">Next</button>
+                </div>
+            </div>
+            <div id="question8" class="question-page">
+                <div class="instructions">
+                    <strong>Rating Scale:</strong><br>
+                    1 or 2 – This area is completely off-track.<br>
+                    3 or 4 – I know this area needs work, but I have no immediate action plan.<br>
+                    5 or 6 – I’m neutral, neither great nor terrible.<br>
+                    7 or 8 – I’m doing well, but there’s room for improvement.<br Discrimination>
+                    9 or 10 – I’m highly satisfied, or this area isn’t a priority right now.
+                </div>
+                <div class="question">
+                    <label>8. Community Impact: Do you feel you are making a difference- through giving, mentoring, or meaningful service?</label>
+                    <div class="slider-container">
+                        <input type="range" name="Community" min="1" max="10" value="1" oninput="updateSliderValue(this)">
+                        <span class="slider-value">10</span>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" onclick="prevQuestion(8)">Previous</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+        <div id="results">
+            <h2>Your Wheel of Life Snapshot</h2>
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Life Focus Area</th>
+                        <th>Current Score</th>
+                        <th>Path to "10"</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <canvas id="wheelChart" width="400" height="400"></canvas>
+            <div class="coaching-section">
+                <p><b>💬 Reflection Prompts:</b>
+<p> • Which area surprised you the most? Why?</P>
+<p> • What’s one small shift you could make in your lowest-scoring area?</p>   
+<p>• How would your life feel if each area was closer to a 10?</p>  
+<p>• What would it mean to live with bold alignment, purpose, and joy?</p> 
+A balanced life doesn’t mean perfection—it means intentional growth. Recognizing what feels off is the first step toward living fully, not just functionally.</p>
+
+<h3>Call to Action:</h3>
+<p> <p>Ready to Shine Brighter?</p>
+ </p>
+<p><a href="https://www.theshootingstarsuccess.com/" target="https://www.theshootingstarsuccess.com/"> Subscribe here </a></p></p> to receive bold strategies, success tips and uplifting stories that keep your light shining and updates on our upcoming book <b>DARING BODLY</b>
+<p>or</p> 
+<p>contact: grace@theshootingstarsuccess.com to learn how she can support your shooting star journey</p>
+ 
+  <h3>Need more information, explore what we offer:</h3>
+  <p><a href="https://www.theshootingstarsuccess.com/" target="https://www.theshootingstarsuccess.com/"> Shooting Star Programs </a></p></p>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateSliderValue(slider) {
+            slider.nextElementSibling.textContent = slider.value;
+        }
+
+        function showQuestion(index) {
+            document.querySelectorAll('.question-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`question${index}`).classList.add('active');
+        }
+
+        function nextQuestion(currentIndex) {
+            const currentInput = document.querySelector(`#question${currentIndex} input[type="range"]`);
+            if (currentInput.value) {
+                showQuestion(currentIndex + 1);
+            } else {
+                alert('Please select a value before proceeding.');
+            }
+        }
+
+        function prevQuestion(currentIndex) {
+            showQuestion(currentIndex - 1);
+        }
+
+        const form = document.getElementById('surveyForm');
+        const resultsDiv = document.getElementById('results');
+        const resultsTableBody = document.querySelector('#resultsTable tbody');
+        const canvas = document.getElementById('wheelChart');
+        const ctx = canvas.getContext('2d');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const scores = {
+                'Health & Fitness': parseInt(formData.get('health')),
+                'Finances': parseInt(formData.get('finances')),
+                'Career': parseInt(formData.get('career')),
+                'Business': parseInt(formData.get('business')),
+                'Relationships': parseInt(formData.get('relationships')),
+                'Personal Growth': parseInt(formData.get('personalGrowth')),
+                'Fun & Recreation': parseInt(formData.get('fun')),
+                'Community Impact': parseInt(formData.get('Community'))
+            };
+
+            // Populate results table
+            resultsTableBody.innerHTML = '';
+            Object.entries(scores).forEach(([aspect, score]) => {
+                const gap = 10 - score;
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${aspect}</td><td>${score}</td><td>${gap}</td>`;
+                resultsTableBody.appendChild(row);
+            });
+
+            // Draw circular chart
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxRadius = 150;
+            const ringWidth = maxRadius / 10;
+            const numAspects = 8;
+            const anglePerAspect = (2 * Math.PI) / numAspects;
+
+            const colors = [
+                '#3498db', '#e74c3c', '#2980b9', '#f39c12',
+                '#e91e63', '#8e44ad', '#1abc9c', '#7f8c8d'
+            ];
+
+            // Draw concentric rings and fill based on scores
+            Object.entries(scores).forEach(([aspect, score], index) => {
+                const startAngle = index * anglePerAspect - Math.PI / 2;
+                const endAngle = (index + 1) * anglePerAspect - Math.PI / 2;
+
+                // Draw filled rings up to the score
+                for (let i = 1; i <= 10; i++) {
+                    const radius = i * ringWidth;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                    ctx.arc(centerX, centerY, (i - 1) * ringWidth, endAngle, startAngle, true);
+                    ctx.closePath();
+
+                    if (i <= score) {
+                        ctx.fillStyle = colors[index];
+                        ctx.fill();
+                    } else {
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                        ctx.fill();
+                    }
+
+                    // Draw ring outline
+                    ctx.strokeStyle = '#ddd';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                // Draw labels
+                const labelRadius = maxRadius + 20;
+                const labelAngle = startAngle + anglePerAspect / 2;
+                const labelX = centerX + labelRadius * Math.cos(labelAngle);
+                const labelY = centerY + labelRadius * Math.sin(labelAngle);
+                ctx.fillStyle = '#000';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(aspect, labelX, labelY);
+            });
+
+            // Draw center circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, ringWidth / 2, 0, 2 * Math.PI);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            ctx.strokeStyle = '#ddd';
+            ctx.stroke();
+
+            resultsDiv.style.display = 'block';
+            form.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
